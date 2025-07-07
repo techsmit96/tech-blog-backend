@@ -1,13 +1,12 @@
 import { Schema, model, Document, Model } from "mongoose";
 import { COLLECTIONS } from "../database/collections";
-import { generateCustomeId } from "../common/methods.common";
 
 export interface IUser extends Document {
   name: String;
   email: String;
   password: String;
   token: String | null;
-  role_type: String | null;
+  role_id: Schema.Types.ObjectId;
   avatar: String;
   mobile_no: Number | null;
   login_devices: any[] | null;
@@ -31,10 +30,18 @@ const UserSchema = new Schema<IUser>(
     email: { type: String, required: false, default: null },
     password: { type: String, required: false, default: null },
     token: { type: String, default: null },
-    role_type: { type: String, default: null },
+    role_id: {
+      type: Schema.Types.ObjectId,
+      ref: COLLECTIONS.ROLES,
+      default: null,
+    },
     avatar: { type: String, default: null },
     mobile_no: { type: Number, default: null },
     login_devices: { type: Array, default: null },
+    is_email_verified: { type: Boolean, default: false },
+    is_mobile_verified: { type: Boolean, default: false },
+    reset_password_token: { type: String, default: null },
+    reset_password_token_expire_time: { type: Date, default: null },
 
     update_last_login: { type: Date, default: null },
     is_active: { type: Boolean, default: true },
